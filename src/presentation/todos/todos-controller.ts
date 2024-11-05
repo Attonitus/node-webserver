@@ -33,7 +33,10 @@ export class TodoController{
     public createTodo = async(req: Request, res: Response) => {
         const [error, createTodoDto] = CreateTodoDto.create(req.body);
         
-        if(error) return res.status(401).json(error);
+        if(error){
+            res.status(401).json(error);
+            return;
+        } 
 
         const todo = await prisma.todo.create({
             data: createTodoDto!
@@ -45,7 +48,10 @@ export class TodoController{
     public updateTodo = async(req: Request, res: Response) => {
         const id = +req.params.id;
         const [error, updateTodoDto] = UpdateTodoDto.update({...req.body, id});
-        if(error) return res.status(400).json(error);
+        if(error){
+            res.status(400).json(error);
+            return;
+        }
 
         const todo = await prisma.todo.findFirst({
             where: { id }
